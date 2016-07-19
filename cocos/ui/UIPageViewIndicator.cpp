@@ -31,6 +31,7 @@ static const char* CIRCLE_IMAGE = "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAQAAADZc7J/A
 NS_CC_BEGIN
 
 static const float SPACE_BETWEEN_INDEX_NODES_DEFAULT = 23;
+static const float indicator_size = .7;
 
 namespace ui {
 
@@ -60,6 +61,7 @@ PageViewIndicator::~PageViewIndicator()
 bool PageViewIndicator::init()
 {
     _currentIndexNode = (Node*) utils::createSpriteFromBase64(CIRCLE_IMAGE);
+    _currentIndexNode->setScale(indicator_size);
     _currentIndexNode->setVisible(false);
     addProtectedChild(_currentIndexNode, 1);
     return true;
@@ -140,6 +142,7 @@ void PageViewIndicator::setSpaceBetweenIndexNodes(float spaceBetweenIndexNodes)
 void PageViewIndicator::increaseNumberOfPages()
 {
     Sprite* indexNode = utils::createSpriteFromBase64(CIRCLE_IMAGE);
+    indexNode->setScale(indicator_size);
 //    indexNode->setOpacity(255 * 0.3f);
     addProtectedChild(indexNode);
     _indexNodes.pushBack(indexNode);
