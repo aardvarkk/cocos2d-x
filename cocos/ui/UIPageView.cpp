@@ -233,6 +233,7 @@ void PageView::handleReleaseLogic(Touch *touch)
     else
     {
         // Handle paging by inertia force.
+        _currentPageIndex = MAX(_currentPageIndex, 0); // TODO: update cocos to newest version to fix issue
         Widget* currentPage = getItem(_currentPageIndex);
         Vec2 destination = calculateItemDestination(Vec2::ANCHOR_MIDDLE, currentPage, Vec2::ANCHOR_MIDDLE);
         Vec2 deltaToCurrentpage = destination - getInnerContainerPosition();
