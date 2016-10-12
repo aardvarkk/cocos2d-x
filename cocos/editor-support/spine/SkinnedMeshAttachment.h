@@ -29,46 +29,62 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef SPINE_TRANSFORMCONSTRAINTDATA_H_
-#define SPINE_TRANSFORMCONSTRAINTDATA_H_
+#ifndef SPINE_SKINNEDMESHATTACHMENT_H_
+#define SPINE_SKINNEDMESHATTACHMENT_H_
 
-#include <spine/BoneData.h>
+#include <spine/Attachment.h>
+#include <spine/Slot.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-typedef struct spTransformConstraintData {
-	const char* const name;
+typedef struct spSkinnedMeshAttachment {
+	spAttachment super;
+	const char* path;
 
-	spBoneData* bone;
-	spBoneData* target;
-	float translateMix;
-	float x, y;
+	int bonesCount;
+	int* bones;
 
-#ifdef __cplusplus
-	spTransformConstraintData() :
-		name(0),
-		bone(0),
-		target(0),
-		translateMix(0),
-		x(0),
-		y(0) {
-	}
-#endif
-} spTransformConstraintData;
+	int weightsCount;
+	float* weights;
 
-spTransformConstraintData* spTransformConstraintData_create (const char* name);
-void spTransformConstraintData_dispose (spTransformConstraintData* self);
+	int trianglesCount;
+	int* triangles;
+
+	int uvsCount;
+	float* regionUVs;
+	float* uvs;
+	int hullLength;
+
+	float r, g, b, a;
+
+	void* rendererObject;
+	int regionOffsetX, regionOffsetY; /* Pixels stripped from the bottom left, unrotated. */
+	int regionWidth, regionHeight; /* Unrotated, stripped pixel size. */
+	int regionOriginalWidth, regionOriginalHeight; /* Unrotated, unstripped pixel size. */
+	float regionU, regionV, regionU2, regionV2;
+	int/*bool*/regionRotate;
+
+	/* Nonessential. */
+	int edgesCount;
+	int* edges;
+	float width, height;
+} spSkinnedMeshAttachment;
+
+spSkinnedMeshAttachment* spSkinnedMeshAttachment_create (const char* name);
+void spSkinnedMeshAttachment_updateUVs (spSkinnedMeshAttachment* self);
+void spSkinnedMeshAttachment_computeWorldVertices (spSkinnedMeshAttachment* self, spSlot* slot, float* worldVertices);
 
 #ifdef SPINE_SHORT_NAMES
-typedef spTransformConstraintData TransformConstraintData;
-#define TransformConstraintData_create(...) spTransformConstraintData_create(__VA_ARGS__)
-#define TransformConstraintData_dispose(...) spTransformConstraintData_dispose(__VA_ARGS__)
+typedef spSkinnedMeshAttachment SkinnedMeshAttachment;
+#define SkinnedMeshAttachment_create(...) spSkinnedMeshAttachment_create(__VA_ARGS__)
+#define SkinnedMeshAttachment_updateUVs(...) spSkinnedMeshAttachment_updateUVs(__VA_ARGS__)
+#define SkinnedMeshAttachment_computeWorldVertices(...) spSkinnedMeshAttachment_computeWorldVertices(__VA_ARGS__)
 #endif
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* SPINE_TRANSFORMCONSTRAINTDATA_H_ */
+#endif /* SPINE_SKINNEDMESHATTACHMENT_H_ */
