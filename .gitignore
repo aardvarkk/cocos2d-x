@@ -125,6 +125,7 @@ tests/*/proj.android-studio/app/proguard-project.txt
 # Android
 project.properties
 *.iml
+**/.d
 
 # Ignore prebuilt libraries folder
 /external/*
