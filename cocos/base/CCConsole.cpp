@@ -1,5 +1,5 @@
 /****************************************************************************
- Copyright (c) 2013-2014 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
 
  http://www.cocos2d-x.org
 
@@ -1471,9 +1471,9 @@ void Console::printFileUtils(int fd)
 void Console::sendHelp(int fd, const std::map<std::string, Command>& commands, const char* msg)
 {
     Console::Utility::sendToConsole(fd, msg, strlen(msg));
-    for(auto it=commands.begin();it!=commands.end();++it)
+    for(auto& it : commands)
     {
-        auto command = it->second;
+        auto command = it.second;
         if (command.help.empty()) continue;
         
         Console::Utility::mydprintf(fd, "\t%s", command.name.c_str());

@@ -1,7 +1,7 @@
 /*
  * Created by Rolando Abarca on 3/14/12.
  * Copyright (c) 2012 Zynga Inc. All rights reserved.
- * Copyright (c) 2013-2014 Chukong Technologies Inc.
+ * Copyright (c) 2013-2016 Chukong Technologies Inc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -666,8 +666,7 @@ void ScriptingCore::createGlobalContext() {
 
     runScript("script/jsb_prepare.js");
 
-    for (std::vector<sc_register_sth>::iterator it = registrationList.begin(); it != registrationList.end(); it++) {
-        sc_register_sth callback = *it;
+    for (auto& callback : registrationList) {
         callback(_cx, global);
     }
     

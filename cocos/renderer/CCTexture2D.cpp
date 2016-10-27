@@ -1,7 +1,7 @@
 /****************************************************************************
 Copyright (c) 2008      Apple Inc. All Rights Reserved.
 Copyright (c) 2010-2012 cocos2d-x.org
-Copyright (c) 2013-2014 Chukong Technologies Inc.
+Copyright (c) 2013-2016 Chukong Technologies Inc.
 
 http://www.cocos2d-x.org
 
@@ -1499,7 +1499,7 @@ void Texture2D::setAlphaTexture(Texture2D* alphaTexture)
     if (alphaTexture != nullptr) {
         this->_alphaTexture = alphaTexture;
         this->_alphaTexture->retain();
-        this->_hasPremultipliedAlpha = true; // PremultipliedAlpha shoud be true.
+        this->_hasPremultipliedAlpha = true; // PremultipliedAlpha should be true.
     }
 }
 NS_CC_END

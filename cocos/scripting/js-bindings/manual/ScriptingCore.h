@@ -1,7 +1,7 @@
 /*
  * Created by Rolando Abarca on 3/14/12.
  * Copyright (c) 2012 Zynga Inc. All rights reserved.
- * Copyright (c) 2013-2014 Chukong Technologies Inc.
+ * Copyright (c) 2013-2016 Chukong Technologies Inc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -561,9 +561,8 @@ bool jsb_get_reserved_slot(JSObject *obj, uint32_t idx, jsval& ret);
 template <class T>
 js_type_class_t *jsb_register_class(JSContext *cx, JSClass *jsClass, JS::HandleObject proto, JS::HandleObject parentProto)
 {
-    TypeTest<T> t;
     js_type_class_t *p = nullptr;
-    std::string typeName = t.s_name();
+    std::string typeName = TypeTest<T>::s_name();
     if (_js_global_type_map.find(typeName) == _js_global_type_map.end())
     {
         JS::RootedObject protoRoot(cx, proto);

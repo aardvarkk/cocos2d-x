@@ -1,6 +1,6 @@
 /****************************************************************************
  Copyright (c) 2013      Zynga Inc.
- Copyright (c) 2013-2014 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
 
  http://www.cocos2d-x.org
 
@@ -527,23 +527,18 @@ void Label::reset()
 
 //  ETC1 ALPHA supports, for LabelType::BMFONT & LabelType::CHARMAP
 static Texture2D* _getTexture(Label* label)
- {
-    struct _FontAtlasPub : public FontAtlas
-    {
-        Texture2D* getTexture()
-        {
-            if (!_atlasTextures.empty())
-                return _atlasTextures.begin()->second;
-            return nullptr;
-        }
-    };
-
+{
     auto fontAtlas = label->getFontAtlas();
     Texture2D* texture = nullptr;
-    if (fontAtlas != nullptr)
-        texture = ((_FontAtlasPub*)(fontAtlas))->getTexture();
+    if (fontAtlas != nullptr) {
+        auto textures = fontAtlas->getTextures();
+        if(!textures.empty()) {
+            texture = textures.begin()->second;
+        }
+    }
     return texture;
 }
+
 void Label::updateShaderProgram()
 {
     switch (_currLabelEffect)
@@ -802,9 +797,10 @@ bool Label::alignText()
     do {
         _fontAtlas->prepareLetterDefinitions(_utf16Text);
         auto& textures = _fontAtlas->getTextures();
-        if (textures.size() > static_cast<size_t>(_batchNodes.size()))
+        auto size = textures.size();
+        if (size > static_cast<size_t>(_batchNodes.size()))
         {
-            for (auto index = static_cast<size_t>(_batchNodes.size()); index < textures.size(); ++index)
+            for (auto index = static_cast<size_t>(_batchNodes.size()); index < size; ++index)
             {
                 auto batchNode = SpriteBatchNode::createWithTexture(textures.at(index));
                 if (batchNode)
@@ -821,6 +817,12 @@ bool Label::alignText()
         {
             return true;
         }
+        // optimize for one-texture-only sceneario
+        // if multiple textures, then we should count how many chars
+        // are per texture
+        if (_batchNodes.size()==1)
+            _batchNodes.at(0)->reserveCapacity(_utf16Text.size());
+
         _reusedLetter->setBatchNode(_batchNodes.at(0));
         
         _lengthOfString = 0;
@@ -1655,7 +1657,7 @@ void Label::visit(Renderer *renderer, const Mat4 &parentTransform, uint32_t pare
 
         int i = 0;
         // draw children zOrder < 0
-        for (; i < _children.size(); i++)
+        for (auto size = _children.size(); i < size; ++i)
         {
             auto node = _children.at(i);
 
@@ -1667,7 +1669,7 @@ void Label::visit(Renderer *renderer, const Mat4 &parentTransform, uint32_t pare
         
         this->drawSelf(visibleByCamera, renderer, flags);
 
-        for (auto it = _children.cbegin() + i; it != _children.cend(); ++it)
+        for (auto it = _children.cbegin() + i, itCend = _children.cend(); it != itCend; ++it)
         {
             (*it)->visit(renderer, _modelViewTransform, flags);
         }
@@ -1915,7 +1917,7 @@ void Label::updateDisplayedColor(const Color3B& parentColor)
 
     for (auto&& it : _letters)
     {
-        it.second->updateDisplayedColor(_displayedColor);;
+        it.second->updateDisplayedColor(_displayedColor);
     }
 }
 
@@ -1934,7 +1936,7 @@ void Label::updateDisplayedOpacity(GLubyte parentOpacity)
 
     for (auto&& it : _letters)
     {
-        it.second->updateDisplayedOpacity(_displayedOpacity);;
+        it.second->updateDisplayedOpacity(_displayedOpacity);
     }
 }
 

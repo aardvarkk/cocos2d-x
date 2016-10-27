@@ -206,7 +206,18 @@ class AudioPauseResumeAfterPlay : public AudioEngineTestDemo
 public:
     CREATE_FUNC(AudioPauseResumeAfterPlay);
     
-    virtual bool init() override;
+    virtual void onEnter() override;
+    
+    virtual std::string title() const override;
+    virtual std::string subtitle() const override;
+};
+
+class AudioPreloadSameFileMultipleTimes : public AudioEngineTestDemo
+{
+public:
+    CREATE_FUNC(AudioPreloadSameFileMultipleTimes);
+    
+    virtual void onEnter() override;
     
     virtual std::string title() const override;
     virtual std::string subtitle() const override;

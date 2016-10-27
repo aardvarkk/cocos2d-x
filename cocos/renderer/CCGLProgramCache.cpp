@@ -2,7 +2,7 @@
 Copyright (c) 2011      Ricardo Quesada
 Copyright (c) 2010-2012 cocos2d-x.org
 Copyright (c) 2011      Zynga Inc.
-Copyright (c) 2013-2014 Chukong Technologies Inc.
+Copyright (c) 2013-2016 Chukong Technologies Inc.
 
 http://www.cocos2d-x.org
 
@@ -116,8 +116,8 @@ GLProgramCache::GLProgramCache()
 
 GLProgramCache::~GLProgramCache()
 {
-    for( auto it = _programs.begin(); it != _programs.end(); ++it ) {
-        (it->second)->release();
+    for(auto& program : _programs) {
+        program.second->release();
     }
 
     CCLOGINFO("deallocing GLProgramCache: %p", this);

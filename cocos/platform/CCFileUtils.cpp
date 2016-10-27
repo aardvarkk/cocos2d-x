@@ -1,6 +1,6 @@
 /****************************************************************************
 Copyright (c) 2010-2013 cocos2d-x.org
-Copyright (c) 2013-2014 Chukong Technologies Inc.
+Copyright (c) 2013-2016 Chukong Technologies Inc.
 
 http://www.cocos2d-x.org
 
@@ -292,7 +292,7 @@ public:
         _state = SAX_NONE;
     }
 
-    void textHandler(void *ctx, const char *ch, int len)
+    void textHandler(void *ctx, const char *ch, size_t len) override
     {
         CC_UNUSED_PARAM(ctx);
         if (_state == SAX_NONE)
@@ -1126,7 +1126,7 @@ bool FileUtils::createDirectory(const std::string& path)
 
     // Create path recursively
     subpath = "";
-    for (int i = 0; i < dirs.size(); ++i)
+    for (int i = 0, size = dirs.size(); i < size; ++i)
     {
         subpath += dirs[i];
         dir = opendir(subpath.c_str());

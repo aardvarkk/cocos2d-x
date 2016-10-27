@@ -108,6 +108,7 @@ NewLabelTests::NewLabelTests()
     ADD_TEST_CASE(LabelLocalizationTest);
 
     ADD_TEST_CASE(LabelIssue15214);
+    ADD_TEST_CASE(LabelIssue16293);
     ADD_TEST_CASE(LabelIssue16471);
 };
 
@@ -1075,10 +1076,40 @@ LabelTTFDistanceField::LabelTTFDistanceField()
         nullptr);
     label1->runAction(RepeatForever::create(action));
 
+    // Draw the label border
+    auto& labelContentSize = label1->getContentSize();
+    auto borderDraw = DrawNode::create();
+    label1->addChild(borderDraw);
+    borderDraw->clear();
+    borderDraw->setLineWidth(1);
+    Vec2 vertices[4] =
+    {
+        Vec2::ZERO,
+        Vec2(labelContentSize.width, 0),
+        Vec2(labelContentSize.width, labelContentSize.height),
+        Vec2(0, labelContentSize.height)
+    };
+    borderDraw->drawPoly(vertices, 4, true, Color4F::RED);
+
     auto label2 = Label::createWithTTF(ttfConfig,"Distance Field",TextHAlignment::CENTER,size.width);
     label2->setPosition( Vec2(size.width/2, size.height * 0.3f) );
     label2->setTextColor( Color4B::RED );
     addChild(label2);
+    
+    // Draw the label border
+    auto& labelContentSize2 = label2->getContentSize();
+    auto borderDraw2 = DrawNode::create();
+    label2->addChild(borderDraw2);
+    borderDraw2->clear();
+    borderDraw2->setLineWidth(1);
+    Vec2 vertices2[4] =
+    {
+        Vec2::ZERO,
+        Vec2(labelContentSize2.width, 0),
+        Vec2(labelContentSize2.width, labelContentSize2.height),
+        Vec2(0, labelContentSize2.height)
+    };
+    borderDraw2->drawPoly(vertices2, 4, true, Color4F::GREEN);
 }
 
 std::string LabelTTFDistanceField::title() const
@@ -3200,6 +3231,27 @@ std::string LabelIssue15214::subtitle() const
 }
 
 //
+// LabelIssue16293
+//
+LabelIssue16293::LabelIssue16293()
+{
+    auto size = Director::getInstance()->getVisibleSize();
+    Label* label = Label::createWithTTF("012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789", "fonts/arial.ttf", 12);
+    label->setPosition(size.width/2, size.height/2);
+    this->addChild(label);
+}
+
+std::string LabelIssue16293::title() const
+{
+    return "Github Issue 16293";
+}
+
+std::string LabelIssue16293::subtitle() const
+{
+    return "No TextureAtlas resizes";
+}
+
+//
 // LabelIssue16471
 //
 LabelIssue16471::LabelIssue16471()
@@ -3232,3 +3284,4 @@ std::string LabelIssue16471::subtitle() const
 {
     return "Label should be yellow";
 }
+
