@@ -53,6 +53,7 @@ static CDBufferManager *bufferManager = nil;
 -(id) init
 {
     if((self=[super init])) {
+        [[CDAudioManager sharedManager] setResignBehavior:kAMRBDoNothing autoHandle:YES];
         am = [CDAudioManager sharedManager];
         soundEngine = am.soundEngine;
         bufferManager = [[CDBufferManager alloc] initWithEngine:soundEngine];
