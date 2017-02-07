@@ -337,7 +337,8 @@ Sprite* createSpriteFromBase64Cached(const char* base64String, const char* key)
     }
 
     Sprite* sprite = Sprite::createWithTexture(texture);
-    
+    sprite->setContentSize(texture->getContentSizeInPixels());
+
     return sprite;
 }
 
@@ -362,6 +363,7 @@ Sprite* createSpriteFromBase64(const char* base64String)
     image->release();
 
     Sprite* sprite = Sprite::createWithTexture(texture);
+    sprite->setContentSize(texture->getContentSizeInPixels());
     texture->release();
 
     return sprite;
