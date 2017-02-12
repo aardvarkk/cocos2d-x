@@ -215,11 +215,14 @@ public:
     */
     void renameTextureWithKey(const std::string& srcName, const std::string& dstName);
 
+		void setMemoryLimit(int limit);
 
 private:
     void addImageAsyncCallBack(float dt);
     void loadImage();
     void parseNinePatchImage(Image* image, Texture2D* texture, const std::string& path);
+    int  getTextureTotalBytes(Texture2D* tex) const;
+    int  getTotalCachedMB() const;
 public:
 protected:
     struct AsyncStruct;
@@ -242,6 +245,8 @@ protected:
     std::unordered_map<std::string, Texture2D*> _textures;
 
     static std::string s_etc1AlphaFileSuffix;
+
+    int _memoryLimit;
 };
 
 #if CC_ENABLE_CACHE_TEXTURE_DATA

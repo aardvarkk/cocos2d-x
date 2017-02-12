@@ -65,6 +65,7 @@ TextureCache::TextureCache()
 : _loadingThread(nullptr)
 , _needQuit(false)
 , _asyncRefCount(0)
+, _memoryLimit(0)
 {
 }
 
@@ -363,6 +364,13 @@ Texture2D * TextureCache::addImage(const std::string &path)
         // all images are handled by UIImage except PVR extension that is handled by our own handler
         do
         {
+            // Clear out unused textures if we're above the requested memory limit
+            if (_memoryLimit && (getTotalCachedMB() > _memoryLimit))
+            {
+            	CCLOG("cocos2d: Exceeded memory limit of %d -- removing unused textures!");
+              removeUnusedTextures();
+            }
+
             image = new (std::nothrow) Image();
             CC_BREAK_IF(nullptr == image);
 
@@ -611,6 +619,25 @@ void TextureCache::waitForQuit()
     if (_loadingThread) _loadingThread->join();
 }
 
+void TextureCache::setMemoryLimit(int limit)
+{
+  _memoryLimit = limit;
+}
+
+int TextureCache::getTextureTotalBytes(Texture2D* tex) const
+{
+  // Each texture takes up width * height * bytesPerPixel bytes.
+  return tex->getPixelsWide() * tex->getPixelsHigh() * tex->getBitsPerPixelForFormat() / 8;
+}
+
+int TextureCache::getTotalCachedMB() const
+{
+  unsigned int total_bytes = 0;
+  for (auto const& tex : _textures)
+    total_bytes += getTextureTotalBytes(tex.second);
+  return total_bytes / 1024 / 1024;
+}
+
 std::string TextureCache::getCachedTextureInfo() const
 {
     std::string buffer;
@@ -625,9 +652,7 @@ std::string TextureCache::getCachedTextureInfo() const
 
 
         Texture2D* tex = texture.second;
-        unsigned int bpp = tex->getBitsPerPixelForFormat();
-        // Each texture takes up width * height * bytesPerPixel bytes.
-        auto bytes = tex->getPixelsWide() * tex->getPixelsHigh() * bpp / 8;
+        auto bytes = getTextureTotalBytes(tex);
         totalBytes += bytes;
         count++;
         snprintf(buftmp, sizeof(buftmp) - 1, "\"%s\" rc=%lu id=%lu %lu x %lu @ %ld bpp => %lu KB\n",
@@ -636,7 +661,7 @@ std::string TextureCache::getCachedTextureInfo() const
             (long)tex->getName(),
             (long)tex->getPixelsWide(),
             (long)tex->getPixelsHigh(),
-            (long)bpp,
+            (long)tex->getBitsPerPixelForFormat(),
             (long)bytes / 1024);
 
         buffer += buftmp;
