@@ -367,7 +367,7 @@ Texture2D * TextureCache::addImage(const std::string &path)
             // Clear out unused textures if we're above the requested memory limit
             if (_memoryLimit && (getTotalCachedMB() > _memoryLimit))
             {
-            	CCLOG("cocos2d: Exceeded memory limit of %d -- removing unused textures!");
+            	CCLOG("cocos2d: Exceeded memory limit of %d -- removing unused textures!", _memoryLimit);
               removeUnusedTextures();
             }
 
