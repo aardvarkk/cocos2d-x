@@ -30,6 +30,7 @@ THE SOFTWARE.
 
 #include <thread>
 #include <chrono>
+#include <cstdlib>
 
 namespace cocos2d { namespace experimental {
 
