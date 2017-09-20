@@ -1150,6 +1150,7 @@ bool FileUtils::createDirectory(const std::string& path)
 
 bool FileUtils::removeDirectory(const std::string& path)
 {
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_IOS) && (CC_TARGET_PLATFORM != CC_PLATFORM_MAC)
     std::string command = "rm -r ";
     // Path may include space.
     command += "\"" + path + "\"";
@@ -1157,6 +1158,10 @@ bool FileUtils::removeDirectory(const std::string& path)
         return true;
     else
         return false;
+#else
+  CCASSERT(false, "FileUtils not support removeDirectory");
+  return false;
+#endif
 }
 
 bool FileUtils::removeFile(const std::string &path)
