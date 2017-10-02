@@ -70,13 +70,19 @@ Sprite* Sprite::createWithTexture(Texture2D *texture, const Rect& rect, bool rot
 Sprite* Sprite::create(const std::string& filename)
 {
     Sprite *sprite = new (std::nothrow) Sprite();
-    if (sprite && sprite->initWithFile(filename))
-    {
-        sprite->autorelease();
-        return sprite;
-    }
-    CC_SAFE_DELETE(sprite);
-    return nullptr;
+//    if (sprite && sprite->initWithFile(filename))
+//    {
+//        sprite->autorelease();
+//        return sprite;
+//    }
+//    CC_SAFE_DELETE(sprite);
+//    return nullptr;
+
+  // IAN: returning an empty node rather than returning nullptr reduces chance of a crash on missing graphics
+  if (!sprite->initWithFile(filename))
+  	CCLOG("ERROR: Unable to initWithFile %s", filename.c_str());
+	sprite->autorelease();
+  return sprite;
 }
 
 Sprite* Sprite::create(const PolygonInfo& info)
